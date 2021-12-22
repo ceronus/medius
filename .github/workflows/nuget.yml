@@ -19,11 +19,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        #source-url: https://nuget.pkg.github.com/ceronus/index.json
         source-url: https://api.nuget.org/v3/index.json
         dotnet-version: 6.x
       env:
-        #NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}} 
     
     - name: Restore dependencies (dotnet restore)
@@ -43,4 +41,11 @@ jobs:
       working-directory: src
 
     - name: Push package to github registry (dotnet nuget push)
-      run: dotnet nuget push **/publish/*.nupkg --skip-duplicate --no-symbols true
+      run: dotnet nuget push **/publish/*.nupkg --api-key ${NUGET_API_KEY} --skip-duplicate --no-symbols true
+      env:
+        NUGET_API_KEY: ${{secrets.NUGET_API_KEY}} 
+
+
+# TODO: Create and additional job for GitHub 
+# source-url: https://nuget.pkg.github.com/ceronus/index.json
+# NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
