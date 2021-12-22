@@ -43,7 +43,7 @@ jobs:
     - name: Push package to github registry (dotnet nuget push)
       run: dotnet nuget push **/publish/*.nupkg --api-key ${NUGET_API_KEY} --skip-duplicate --no-symbols true
       env:
-        NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}} 
+        NUGET_API_KEY: ${{secrets.NUGET_API_KEY}} 
 
 
 # TODO: Create and additional job for GitHub 
