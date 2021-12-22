@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-    name: publish nuget package
     runs-on: windows-latest
 
     steps:
