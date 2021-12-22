@@ -3,16 +3,17 @@ name: publish nuget package
 on:
   push:
     branches: 
-    - release/*
+      - release/*
 
 jobs:
   build:
+    
     runs-on: windows-latest
-
+    
     steps:
     
     - name: checkout repository
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
     
     - name: setup .NET Core
       uses: actions/setup-dotnet@v1
