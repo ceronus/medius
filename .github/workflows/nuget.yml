@@ -1,4 +1,4 @@
-name: Publish Nuget Package
+name: Publish NuGet Package
 
 on:
   push:
@@ -7,16 +7,16 @@ on:
       - release/*
 
 jobs:
-  build:
+  Build:
     
     runs-on: windows-latest
     
     steps:
     
-    - name: checkout repository
+    - name: Checkout repository
       uses: actions/checkout@v2
     
-    - name: setup .NET Core
+    - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         source-url: https://nuget.pkg.github.com/ceronus/index.json
@@ -24,18 +24,22 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
     
-    - name: dotnet restore (restore dependencies)
+    - name: Restore dependencies (dotnet restore)
       run: dotnet restore
       working-directory: src
       
-    - name: dotnet build
+    - name: Build (dotnet build)
       run: dotnet build --no-restore
+      working-directory: src
       
-    - name: dotnet test
+    - name: Test (dotnet test)
       run: dotnet test --no-build --verbosity normal
+      working-directory: src
       
-    - name: dotnet pack (create nuget package)
+    - name: Create nuget package (dotnet pack)
       run: dotnet pack --no-restore --no-build --configuration release --output publish
+      working-directory: src
 
-    - name: dotnet nuget push (push package to github registry)
+    - name: Push package to github registry (dotnet nuget push)
       run: dotnet nuget push /publish/*.nupkg --skip-duplicate --no-symbols true
+      working-directory: src
