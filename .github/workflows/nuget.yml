@@ -21,6 +21,8 @@ jobs:
       with:
         source-url: https://nuget.pkg.github.com/ceronus/index.json
         dotnet-version: 6.x
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
     
     - name: Restore dependencies (dotnet restore)
       run: dotnet restore
