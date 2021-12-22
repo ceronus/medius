@@ -26,6 +26,7 @@ jobs:
     
     - name: dotnet restore (restore dependencies)
       run: dotnet restore
+      working-directory: src/*.csproj
       
     - name: dotnet build
       run: dotnet build --no-restore
