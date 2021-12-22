@@ -41,5 +41,4 @@ jobs:
       working-directory: src
 
     - name: Push package to github registry (dotnet nuget push)
-      run: dotnet nuget push publish/*.nupkg --skip-duplicate --no-symbols true
-      working-directory: src
+      run: dotnet nuget push ./src/publish/*.nupkg --skip-duplicate --no-symbols true
