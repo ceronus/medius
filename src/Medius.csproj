@@ -12,6 +12,8 @@
     <Description>Medius</Description>
     <Company>Ceronus</Company>
     <Authors>Ken Svensson</Authors>
+    <!-- NuGet -->
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <!-- Framework References -->
