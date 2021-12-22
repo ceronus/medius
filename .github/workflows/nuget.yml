@@ -1,4 +1,4 @@
-name: publish nuget package
+name: Publish Nuget Package
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
     
     - name: dotnet restore (restore dependencies)
       run: dotnet restore
-      working-directory: src/*.csproj
+      working-directory: src
       
     - name: dotnet build
       run: dotnet build --no-restore
