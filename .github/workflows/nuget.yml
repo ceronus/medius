@@ -10,6 +10,9 @@ jobs:
   NuGet:
     
     runs-on: windows-2022
+    env:
+      NUGET_SOURCE_URL: https://api.nuget.org/v3/index.json
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }} 
     
     steps:
     
@@ -19,10 +22,10 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        source-url: https://api.nuget.org/v3/index.json
+        source-url: $NUGET_SOURCE_URL
         dotnet-version: 6.x
       env:
-        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }} 
+        NUGET_AUTH_TOKEN: $NUGET_API_KEY 
     
     - name: Restore dependencies (dotnet restore)
       run: dotnet restore
@@ -41,9 +44,8 @@ jobs:
       working-directory: src
 
     - name: Publish package to nuget.org registry (dotnet nuget push)
-      run: dotnet nuget push **/publish/*.nupkg -k $NUGET_API_KEY -s https://api.nuget.org/v3/index.json --no-symbols true --skip-duplicate
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }} 
+      run: dotnet nuget push **/publish/*.nupkg --api-key $NUGET_API_KEY --source $NUGET_SOURCE_URL --no-symbols true --skip-duplicate
+      
 
 
 # TODO: Create and additional job for GitHub 
