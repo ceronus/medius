@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        source-url: $NUGET_SOURCE_URL
+        source-url: ${{ NUGET_SOURCE_URL }}
         dotnet-version: 6.x
     
     - name: Restore dependencies (dotnet restore)
