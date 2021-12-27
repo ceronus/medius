@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-2022
     env:
       NUGET_SOURCE_URL: https://api.nuget.org/v3/index.json
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }} 
+      NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }} 
     
     steps:
     
@@ -24,8 +24,6 @@ jobs:
       with:
         source-url: $NUGET_SOURCE_URL
         dotnet-version: 6.x
-      env:
-        NUGET_AUTH_TOKEN: $NUGET_API_KEY 
     
     - name: Restore dependencies (dotnet restore)
       run: dotnet restore
@@ -44,7 +42,7 @@ jobs:
       working-directory: src
 
     - name: Publish package to nuget.org registry (dotnet nuget push)
-      run: dotnet nuget push **/publish/*.nupkg --api-key $NUGET_API_KEY --source $NUGET_SOURCE_URL --no-symbols true --skip-duplicate
+      run: dotnet nuget push **/publish/*.nupkg --api-key $NUGET_AUTH_TOKEN --source $NUGET_SOURCE_URL --no-symbols true --skip-duplicate
       
 
 
