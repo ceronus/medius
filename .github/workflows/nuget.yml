@@ -3,7 +3,6 @@ name: Publish NuGet Package
 on:
   push:
     branches: 
-      - master # TODO: Once testing is complete, remove this.
       - release/*
 
 jobs:
