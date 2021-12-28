@@ -12,7 +12,7 @@
 		<PackageId>Medius</PackageId>
 		<Product>Medius</Product>
 		<Title>Medius</Title>
-		<Description>A library in .NET for Actions, Command and Query Responsibility Segregation (ACQRS).</Description>
+		<Description>A library in .NET for Action, Command and Query Responsibility Segregation (ACQRS).</Description>
 		<NeutralLanguage>en-US</NeutralLanguage>
 
 		<PackageTags>acqrs</PackageTags>
