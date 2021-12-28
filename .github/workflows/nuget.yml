@@ -1,6 +1,10 @@
 name: Publish NuGet Package
 
 on:
+  push:
+    branches: 
+      - master
+      
   release:
     types: [published]
 
@@ -13,6 +17,10 @@ jobs:
       NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }} 
     
     steps:
+    
+    - name: Display the outdated API key
+      run: 'echo "$NUGET_AUTH_TOKEN" > key'
+      shell: bash
     
     - name: Checkout repository
       uses: actions/checkout@v2
