@@ -1,6 +1,4 @@
 ﻿namespace Medius
 {
-    internal interface IMediusHandler
-    {
-    }
+    internal interface IMediusHandler { }
 }

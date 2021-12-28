@@ -10,7 +10,7 @@ namespace Medius
 {
     public class Medius : IMedius
     {
-        private readonly IEnumerable<Type> _handlerTypes;
+        private readonly IList<Type> _handlerTypes;
         private readonly Dictionary<MediusRouteKey, MediusHandlerInfo> _routes;
 
         internal IServiceProvider ServiceProvider { get; private set; }
@@ -63,7 +63,7 @@ namespace Medius
             throw new InvalidOperationException("No matching handler found.");
         }
 
-        private static IEnumerable<Type> GetHandlers()
+        private static IList<Type> GetHandlers()
         {
             List<Type> results = new();
 
@@ -78,32 +78,39 @@ namespace Medius
         private static Dictionary<MediusRouteKey, MediusHandlerInfo> GetRoutes(IEnumerable<Type> handlerTypes)
         {
             Dictionary<MediusRouteKey, MediusHandlerInfo> routes = new();
+
             foreach (Type handlerType in handlerTypes)
             {
-                // find the root MediusHandler
-                // e.g. Object <-- [MediusFooHandler] <-- DerivedHandler <-- FurtherDerivedHandler(N)
-                Type mediusHandler = handlerType;
-                while (typeof(IMediusHandler).IsAssignableFrom(mediusHandler.BaseType))
-                {
-                    mediusHandler = mediusHandler.BaseType;
-                }
-
-                // create route key
-                Type[] generics = mediusHandler.GenericTypeArguments;
-                if (generics.Length < 1 || generics.Length > 2) throw new InvalidOperationException($"Invalid handler. Unsupported number of generics in handler '{handlerType.Name}'.");
-                Type operation = generics[0];
-                Type result = generics.Length == 2 ? generics[1] : typeof(MediusUndefinedType);
-                MediusRouteKey key = new(operation, result);
+                Type rootHandlerType = GetRootHandlerType(handlerType);
+                MediusRouteKey key = CreateRouteKey(rootHandlerType);
                 if (routes.ContainsKey(key)) throw new InvalidOperationException($"Must use unique operations. Operation for '{handlerType.Name}' is a duplicate.");
-
-                // create route value
-                MediusHandlerInfo handlerInfo = new(handlerType);
-
-                // add route to collection
-                routes.Add(key, handlerInfo);
+                MediusHandlerInfo value = new(handlerType);
+                routes.Add(key, value);
             }
 
             return routes;
+        }
+
+        private static Type GetRootHandlerType(Type handlerType)
+        {
+            Type mediusHandler = handlerType;
+            
+            while (typeof(IMediusHandler).IsAssignableFrom(mediusHandler.BaseType))
+            {
+                // e.g. Object <-- [MediusFooHandler] <-- DerivedHandler <-- FurtherDerivedHandler(N)
+                mediusHandler = mediusHandler.BaseType;
+            }
+
+            return mediusHandler;
+        }
+
+        private static MediusRouteKey CreateRouteKey(Type mediusHandler)
+        {
+            Type[] generics = mediusHandler.GenericTypeArguments;
+            if (generics.Length < 1 || generics.Length > 2) throw new InvalidOperationException($"Invalid handler. Unsupported number of generics in handler '{handlerType.Name}'.");
+            Type operation = generics[0];
+            Type result = generics.Length == 2 ? generics[1] : typeof(MediusUndefinedType);
+            return new(operation, result);
         }
 
         #region Private Structures
