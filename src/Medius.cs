@@ -120,7 +120,7 @@ namespace Medius
 
             public override bool Equals(object obj)
             {
-                if (obj == null || !(obj is MediusRouteKey)) return false;
+                if (obj is null || obj is not MediusRouteKey) return false;
 
                 return this.Equals((MediusRouteKey)obj);
             }

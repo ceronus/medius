@@ -1,5 +1,4 @@
-﻿#pragma warning disable CA1725 // Parameter names should match base declaration
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Medius
