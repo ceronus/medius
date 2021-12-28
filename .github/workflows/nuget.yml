@@ -18,10 +18,6 @@ jobs:
     
     steps:
     
-    - name: Display the outdated API key
-      run: 'echo "$NUGET_AUTH_TOKEN" > key'
-      shell: bash
-    
     - name: Checkout repository
       uses: actions/checkout@v2
     
@@ -36,7 +32,7 @@ jobs:
       working-directory: src
 
     - name: Publish package to nuget.org registry (dotnet nuget push)
-      run: dotnet nuget push **/publish/*.nupkg --api-key $NUGET_AUTH_TOKEN --source $NUGET_SOURCE_URL --no-symbols true --skip-duplicate
+      run: dotnet nuget push **/publish/*.nupkg --api-key ${{ env.NUGET_AUTH_TOKEN}} --source $NUGET_SOURCE_URL --no-symbols true --skip-duplicate
       
 
 # TODO: Create and additional job for GitHub 
