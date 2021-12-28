@@ -1,26 +1,46 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    
-    <!-- Assembly Information -->
-    <RootNamespace>Medius</RootNamespace>
-    <AssemblyName>Medius</AssemblyName>
-    
-    <!-- Package Information -->
-    <PackageId>Medius</PackageId>
-    <Version>1.0.0</Version>
-    <Description>A library in .NET for Actions, Command and Query Responsibility Segregation (ACQRS).</Description>
-    <Authors>Ken Svensson</Authors>
-    <Company>Ceronus</Company>
-    
-    <!-- NuGet -->
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
 
-  <!-- Framework References -->
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+		<!-- Assembly Information -->
+		<RootNamespace>Medius</RootNamespace>
+		<AssemblyName>Medius</AssemblyName>
+		
+		<!-- Package Information -->
+		<Version>1.0.0</Version>
+		<PackageId>Medius</PackageId>
+		<Product>Medius</Product>
+		<Title>Medius</Title>
+		<Description>A library in .NET for Actions, Command and Query Responsibility Segregation (ACQRS).</Description>
+		<NeutralLanguage>en-US</NeutralLanguage>
+
+		<PackageTags>acqrs</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon-128x128.png</PackageIcon>
+		<PackageIconUrl>https://github.com/ceronus/medius/src/icon-64x64.png</PackageIconUrl>
+
+		<Authors>Ken Svensson</Authors>
+		<Company>Ceronus</Company>
+		<Copyright>Copyright © Ceronus 2021</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/ceronus/medius</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+	
+	<!-- License -->
+	<ItemGroup>
+		<None Include="..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\doc\icons\icon-128x128.png" Pack="true" PackagePath="\" />
+		<None Include="..\doc\icons\icon-64x64.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<!-- Framework References -->
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
 </Project>
