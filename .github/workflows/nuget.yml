@@ -3,7 +3,7 @@ name: Publish NuGet Package
 on:
   push:
     branches: 
-      - master
+      - master # TODO: Once testing is complete, remove this.
       - release/*
 
 jobs:
@@ -25,26 +25,13 @@ jobs:
         source-url: ${{ env.NUGET_SOURCE_URL }}
         dotnet-version: 6.x
     
-    - name: Restore dependencies (dotnet restore)
-      run: dotnet restore
-      working-directory: src
-      
-    - name: Build (dotnet build)
-      run: dotnet build --configuration release --no-restore
-      working-directory: src
-      
-    - name: Test (dotnet test)
-      run: dotnet test --configuration release --no-build --verbosity normal
-      working-directory: src
-      
-    - name: Create nuget package (dotnet pack)
-      run: dotnet pack --no-restore --configuration release --output publish
+    - name: Build solution and create nuget package (dotnet pack)
+      run: dotnet pack --configuration release --output publish
       working-directory: src
 
     - name: Publish package to nuget.org registry (dotnet nuget push)
       run: dotnet nuget push **/publish/*.nupkg --api-key $NUGET_AUTH_TOKEN --source $NUGET_SOURCE_URL --no-symbols true --skip-duplicate
       
-
 
 # TODO: Create and additional job for GitHub 
 # source-url: https://nuget.pkg.github.com/ceronus/index.json
