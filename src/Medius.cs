@@ -107,7 +107,7 @@ namespace Medius
         private static MediusRouteKey CreateRouteKey(Type mediusHandler)
         {
             Type[] generics = mediusHandler.GenericTypeArguments;
-            if (generics.Length < 1 || generics.Length > 2) throw new InvalidOperationException($"Invalid handler. Unsupported number of generics in handler '{handlerType.Name}'.");
+            if (generics.Length < 1 || generics.Length > 2) throw new InvalidOperationException($"Invalid handler. Unsupported number of generics in handler '{mediusHandler.Name}'.");
             Type operation = generics[0];
             Type result = generics.Length == 2 ? generics[1] : typeof(MediusUndefinedType);
             return new(operation, result);
