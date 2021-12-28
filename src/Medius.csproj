@@ -8,7 +8,7 @@
     <AssemblyName>Medius</AssemblyName>
     
     <!-- Package Information -->
-    <PackageId>Ceronus.Medius</PackageId>
+    <PackageId>Medius</PackageId>
     <Version>1.0.0</Version>
     <Description>A library in .NET for Actions, Command and Query Responsibility Segregation (ACQRS).</Description>
     <Authors>Ken Svensson</Authors>
