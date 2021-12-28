@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
 
 		<!-- Assembly Information -->
 		<RootNamespace>Medius</RootNamespace>
 		<AssemblyName>Medius</AssemblyName>
 		
 		<!-- Package Information -->
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<PackageId>Medius</PackageId>
 		<Product>Medius</Product>
 		<Title>Medius</Title>
-		<Description>A library in .NET for Actions, Command and Query Responsibility Segregation (ACQRS).</Description>
+		<Description>A library in .NET for Action, Command and Query Responsibility Segregation (ACQRS).</Description>
 		<NeutralLanguage>en-US</NeutralLanguage>
 
 		<PackageTags>acqrs</PackageTags>
