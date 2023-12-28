@@ -17,7 +17,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     
-    - name: Setup .NET Core
+    - name: Setup .NET Cores
       uses: actions/setup-dotnet@v3
       with:
         source-url: ${{ env.NUGET_SOURCE_URL }}
