@@ -7,7 +7,7 @@ on:
 jobs:
   NuGet:
     
-    runs-on: windows-2022
+    runs-on: windows-latest
     env:
       NUGET_SOURCE_URL: https://api.nuget.org/v3/index.json
       NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }} 
@@ -15,7 +15,7 @@ jobs:
     steps:
     
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     
     - name: Setup .NET Cores
       uses: actions/setup-dotnet@v3

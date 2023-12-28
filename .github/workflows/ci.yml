@@ -12,7 +12,7 @@ on:
 jobs:
   NuGet:
     
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       NUGET_SOURCE_URL: https://api.nuget.org/v3/index.json
       NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }} 
