@@ -6,9 +6,9 @@ namespace Medius
     public abstract class MediusActionHandler<TAction, TActionResult> : IMediusHandler, IMediusBaseHandler<TAction, TActionResult>
         where TAction : IMediusAction<TActionResult>
     {
-        public abstract Task<TActionResult> HandleActionAsync(TAction action, CancellationToken cancellationToken);
+        public abstract Task<TActionResult?> HandleActionAsync(TAction action, CancellationToken cancellationToken);
 
-        public Task<TActionResult> HandleAsync(TAction action, CancellationToken cancellationToken)
+        public Task<TActionResult?> HandleAsync(TAction action, CancellationToken cancellationToken)
             => HandleActionAsync(action, cancellationToken);
     }
 }

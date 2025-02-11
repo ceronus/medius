@@ -8,7 +8,7 @@ namespace Medius
     {
         public abstract Task HandleCommandAsync(TCommand command, CancellationToken cancellationToken);
 
-        public async Task<MediusUndefinedType> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<MediusUndefinedType?> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             await HandleCommandAsync(command, cancellationToken).ConfigureAwait(false);
             return default;

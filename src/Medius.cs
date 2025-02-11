@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -13,12 +14,10 @@ namespace Medius
         private readonly IList<Type> _handlerTypes;
         private readonly Dictionary<MediusRouteKey, MediusHandlerInfo> _routes;
 
-        internal IServiceProvider ServiceProvider { get; private set; }
+        internal IServiceProvider? ServiceProvider { get; private set; }
 
         internal Medius(IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-
             _handlerTypes = GetHandlers();
             _routes = GetRoutes(_handlerTypes);
             foreach (Type type in _handlerTypes)
@@ -29,6 +28,8 @@ namespace Medius
 
         public static IServiceCollection CreateInstance(IServiceCollection services)
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
             Medius medius = new(services);
             services.AddSingleton<IMedius, Medius>(serviceProvider =>
             {
@@ -38,25 +39,27 @@ namespace Medius
             return services;
         }
 
-        public Task<TActionResult> InvokeAsync<TActionResult>(IMediusAction<TActionResult> action, CancellationToken cancellationToken = default)
+        public Task<TActionResult?> InvokeAsync<TActionResult>(IMediusAction<TActionResult> action, CancellationToken cancellationToken = default)
             => InvokeAsync((IMediusOperation<TActionResult>)action, cancellationToken);
 
         public Task InvokeAsync(IMediusCommand command, CancellationToken cancellationToken = default)
             => InvokeAsync((IMediusOperation<MediusUndefinedType>)command, cancellationToken);
 
-        public Task<TQueryResult> InvokeAsync<TQueryResult>(IMediusQuery<TQueryResult> query, CancellationToken cancellationToken = default)
+        public Task<TQueryResult?> InvokeAsync<TQueryResult>(IMediusQuery<TQueryResult> query, CancellationToken cancellationToken = default)
             => InvokeAsync((IMediusOperation<TQueryResult>)query, cancellationToken);
 
-        public async Task<TOperationResult> InvokeAsync<TOperationResult>(IMediusOperation<TOperationResult> operation, CancellationToken cancellationToken = default)
+        public async Task<TOperationResult?> InvokeAsync<TOperationResult>(IMediusOperation<TOperationResult> operation, CancellationToken cancellationToken = default)
         {
             MediusRouteKey key = new(operation.GetType(), typeof(TOperationResult));
 
             if (_routes.Keys.Contains(key))
             {
                 MediusHandlerInfo handler = _routes[key];
+                Debug.Assert(ServiceProvider != null);
                 object instance = ServiceProvider.GetRequiredService(handler.Type);
                 object[] parameters = new object[2] { operation, cancellationToken };
-                Task<TOperationResult> task = (Task<TOperationResult>)handler.MethodInfo.Invoke(instance, parameters);
+                Task<TOperationResult?>? task = handler.MethodInfo.Invoke(instance, parameters) as Task<TOperationResult?>;
+                if (task == null) throw new InvalidOperationException("Unable to invoke handler.");
                 return await task.ConfigureAwait(false);
             }
 
@@ -69,7 +72,7 @@ namespace Medius
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                results.AddRange(assembly.GetTypes().Where(type => typeof(IMediusHandler).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)?.ToList());
+                results.AddRange(assembly.GetTypes().Where(type => typeof(IMediusHandler).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract).ToList());
             }
 
             return results;
@@ -125,7 +128,7 @@ namespace Medius
                 this.ResultType = result;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is null || obj is not MediusRouteKey) return false;
 
