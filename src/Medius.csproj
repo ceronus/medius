@@ -27,7 +27,6 @@
 
 		<!-- License -->
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 
 		<!-- Repository -->
 		<RepositoryType>git</RepositoryType>
