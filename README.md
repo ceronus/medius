@@ -9,7 +9,7 @@
 
 ---
 
-### Overview
+## Overview
 **Medius** is a lightweight operation dispatcher for .NET.  
 It follows an **ACQRS** (Actions–Commands–Queries–Responsibility Segregation) model,
 providing a simple, type-safe way to execute operations through dedicated handlers.
@@ -21,7 +21,7 @@ Supports:
 
 ---
 
-### Quick Start
+## Quick Start
 ```csharp
 // Register Medius
 services.AddMedius();
@@ -42,7 +42,7 @@ var result = await medius.InvokeAsync(new GetTimeQuery());
 
 ---
 
-### Concepts
+## Concepts
 
 ACQRS stands for **Actions, Commands, and Queries with Responsibility Segregation**.  
 It extends traditional CQRS principles by explicitly defining “Actions” as first-class operations 
@@ -59,7 +59,7 @@ All handlers are automatically discovered and registered by **Medius** during st
 
 ---
 
-### 💡 **Highlights**
+## 💡 **Highlights**
 - Zero configuration — handlers are auto-discovered via reflection  
 - DI-friendly (handlers can depend on scoped or transient services)  
 - No runtime reflection overhead after startup  
@@ -67,16 +67,39 @@ All handlers are automatically discovered and registered by **Medius** during st
 
 ---
 
-### Project Goals
+## Project Goals
 - **Lightweight by design** — focuses on operation dispatching without external dependencies or pipelines.  
 - **Framework-agnostic** — integrates cleanly into any .NET project using standard dependency injection.  
 - **Explicit, not opinionated** — encourages simple, typed operations over hidden behaviors or conventions.  
 - **Built around ACQRS** — unifies **Actions**, **Commands**, and **Queries** into a clear, consistent execution model.  
 - **Not a MediatR clone** — built independently to provide a smaller, faster, and clearer alternative for internal dispatching needs.  
 
+### Comparison Note
+
+> **Medius** and **MediatR** share the broad idea of dispatching operations,  
+> but they differ fundamentally in purpose and design philosophy.
+
+**Medius**
+- Self-contained — no external dependencies  
+- Automatically discovers and registers handlers  
+- Explicitly manages dependency-injection scopes  
+- No pipeline or decorator infrastructure  
+- ~300–400 lines of code — simple, lean, and transparent  
+
+**MediatR**
+- Includes a full behavioral pipeline with pre/post processors  
+- Requires explicit registration for notifications  
+- Introduces its own abstraction layers and decorators  
+- Focuses on extensibility and pattern orchestration  
+
+Medius is not a MediatR clone.  
+It was built independently as a smaller, faster, and clearer alternative  
+for projects that only need clean **operation dispatching**,  
+not full mediator-pattern orchestration.
+
 ---
 
-### Requirements
+## Requirements
 - .NET 8.0 or later  
 
 
