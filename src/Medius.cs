@@ -55,27 +55,19 @@ namespace Medius
 
         public async Task<TOperationResult?> InvokeAsync<TOperationResult>(IMediusOperation<TOperationResult> operation, CancellationToken cancellationToken = default)
         {
-            MediusRouteKey key = new(operation.GetType(), typeof(TOperationResult));
-
-            if (_routes.Keys.Contains(key))
-            {
-                MediusHandlerInfo handler = _routes[key];
-                Debug.Assert(_scopeFactory != null);
-                object instance = ResolveHandler(handler.Type);
-                object[] parameters = new object[2] { operation, cancellationToken };
-                Task<TOperationResult?>? task = handler.MethodInfo.Invoke(instance, parameters) as Task<TOperationResult?>;
-                if (task == null) throw new InvalidOperationException("Unable to invoke handler.");
-                return await task.ConfigureAwait(false);
-            }
-
-            throw new InvalidOperationException("No matching handler found.");
-        }
-
-        private object ResolveHandler(Type handlerType)
-        {
             if (_scopeFactory is null) throw new InvalidOperationException("Medius not initialized.");
-            using var scope = _scopeFactory.CreateScope();
-            return scope.ServiceProvider.GetRequiredService(handlerType);
+            
+            MediusRouteKey key = new(operation.GetType(), typeof(TOperationResult));
+            if (!_routes.Keys.Contains(key)) throw new InvalidOperationException("No matching handler found.");
+
+            MediusHandlerInfo handler = _routes[key];
+            Debug.Assert(_scopeFactory != null);
+            using IServiceScope scope = _scopeFactory.CreateScope();
+            object instance = scope.ServiceProvider.GetRequiredService(handler.Type);
+            object[] parameters = new object[2] { operation, cancellationToken };
+            Task<TOperationResult?>? task = handler.MethodInfo.Invoke(instance, parameters) as Task<TOperationResult?>;
+            if (task == null) throw new InvalidOperationException("Unable to invoke handler.");
+            return await task.ConfigureAwait(false);
         }
 
         private static IList<Type> GetHandlers()
@@ -109,7 +101,7 @@ namespace Medius
         private static Type GetRootHandlerType(Type handlerType)
         {
             Type mediusHandler = handlerType;
-            
+
             while (typeof(IMediusHandler).IsAssignableFrom(mediusHandler.BaseType))
             {
                 // e.g. Object <-- [MediusFooHandler] <-- DerivedHandler <-- FurtherDerivedHandler(N)
