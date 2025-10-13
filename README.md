@@ -14,10 +14,19 @@
 It follows an **ACQRS** (Actions–Commands–Queries–Responsibility Segregation) model,
 providing a simple, type-safe way to execute operations through dedicated handlers.
 
-Supports:
-- Commands, Queries, and Actions  
-- Scoped lifetime handling  
-- Simple dependency injection setup  
+### In Plain Terms
+**Medius** helps keep software organized.  
+It makes sure that when an application needs to **do something** or **ask for something**,  
+the right piece of code handles it — clearly and efficiently.  
+It’s built to make applications simpler, more predictable, and easier to maintain.
+
+---
+
+### Features
+- Supports Commands, Queries, and Actions  
+- Scoped lifetime handling for safe DI use  
+- Simple and automatic handler discovery  
+- Zero external dependencies 
 
 ---
 
