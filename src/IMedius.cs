@@ -3,30 +3,40 @@ using System.Threading.Tasks;
 
 namespace Medius
 {
+    /// <summary>
+    /// Defines the Medius operation dispatcher interface. 
+    /// Provides methods to execute <see cref="IMediusCommand"/>, <see cref="IMediusQuery{TQueryResult}"/>, 
+    /// and <see cref="IMediusAction{TActionResult}"/> operations by routing them to their corresponding handlers.
+    /// </summary>
     public interface IMedius
     {
         /// <summary>
-        /// Invoke the associated <see cref="MediusCommandHandler{IMediusCommand}"/>.
+        /// Executes the <see cref="IMediusCommand"/> by locating and invoking its associated 
+        /// <see cref="MediusCommandHandler{TCommand}"/>.
         /// </summary>
-        /// <param name="command">The <see cref="IMediusCommand"/> that will be injected to the handler.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that will be assigned to the new task.</param>
-        /// <returns>The associated handler's <see cref="Task"/>.</returns>
+        /// <param name="command">The command instance to execute.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task InvokeAsync(IMediusCommand command, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Invoke the associated <see cref="MediusQueryHandler{TQuery, IMediusQuery{TQueryResult}}"/>.
+        /// Executes the <see cref="IMediusQuery{TQueryResult}"/> by locating and invoking its associated 
+        /// <see cref="MediusQueryHandler{TQuery, TQueryResult}"/>.
         /// </summary>
-        /// <param name="query">The <see cref="IMediusQuery{TQueryResult}"/> that will be injected to the associated handler.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that will be assigned to the new task.</param>
-        /// <returns>The associated handler's <see cref="Task"/>.</returns>
+        /// <typeparam name="TQueryResult">The expected result type of the query.</typeparam>
+        /// <param name="query">The query instance to execute.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>A task containing the query result.</returns>
         Task<TQueryResult?> InvokeAsync<TQueryResult>(IMediusQuery<TQueryResult> query, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Invoke the associated <see cref="MediusActionHandler{IMediusAction{TActionResult}, TActionResult}"/>.
+        /// Executes the <see cref="IMediusAction{TActionResult}"/> by locating and invoking its associated 
+        /// <see cref="MediusActionHandler{TAction, TActionResult}"/>.
         /// </summary>
-        /// <param name="action">The <see cref="IMediusAction{TActionResult}"/> that will be injected to the associated handler.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that will be assigned to the new task.</param>
-        /// <returns>The associated handler's <see cref="Task"/>.</returns>
+        /// <typeparam name="TActionResult">The expected result type of the action.</typeparam>
+        /// <param name="action">The action instance to execute.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>A task containing the action result.</returns>
         Task<TActionResult?> InvokeAsync<TActionResult>(IMediusAction<TActionResult> action, CancellationToken cancellationToken = default);
     }
 }
