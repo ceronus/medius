@@ -14,7 +14,8 @@ namespace Medius
         private readonly IList<Type> _handlerTypes;
         private readonly Dictionary<MediusRouteKey, MediusHandlerInfo> _routes;
 
-        internal IServiceProvider? ServiceProvider { get; private set; }
+        // replace stored root provider with a scope factory
+        private IServiceScopeFactory? _scopeFactory;
 
         internal Medius(IServiceCollection services)
         {
@@ -22,9 +23,13 @@ namespace Medius
             _routes = GetRoutes(_handlerTypes);
             foreach (Type type in _handlerTypes)
             {
-                services.AddScoped(type);
+                services.AddTransient(type);
             }
         }
+
+        // called once when the container is built
+        internal void Initialize(IServiceProvider root)
+            => _scopeFactory = root.GetRequiredService<IServiceScopeFactory>();
 
         public static IServiceCollection CreateInstance(IServiceCollection services)
         {
@@ -33,7 +38,7 @@ namespace Medius
             Medius medius = new(services);
             services.AddSingleton<IMedius, Medius>(serviceProvider =>
             {
-                medius.ServiceProvider = serviceProvider;
+                medius.Initialize(serviceProvider);
                 return medius;
             });
             return services;
@@ -55,8 +60,8 @@ namespace Medius
             if (_routes.Keys.Contains(key))
             {
                 MediusHandlerInfo handler = _routes[key];
-                Debug.Assert(ServiceProvider != null);
-                object instance = ServiceProvider.GetRequiredService(handler.Type);
+                Debug.Assert(_scopeFactory != null);
+                object instance = ResolveHandler(handler.Type);
                 object[] parameters = new object[2] { operation, cancellationToken };
                 Task<TOperationResult?>? task = handler.MethodInfo.Invoke(instance, parameters) as Task<TOperationResult?>;
                 if (task == null) throw new InvalidOperationException("Unable to invoke handler.");
@@ -64,6 +69,13 @@ namespace Medius
             }
 
             throw new InvalidOperationException("No matching handler found.");
+        }
+
+        private object ResolveHandler(Type handlerType)
+        {
+            if (_scopeFactory is null) throw new InvalidOperationException("Medius not initialized.");
+            using var scope = _scopeFactory.CreateScope();
+            return scope.ServiceProvider.GetRequiredService(handlerType);
         }
 
         private static IList<Type> GetHandlers()
