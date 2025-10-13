@@ -6,3 +6,78 @@
 - [NuGet Package](https://www.nuget.org/packages/medius)
 - [Release Notes](https://github.com/ceronus/medius/releases)
 - [License](LICENSE.md)
+
+---
+
+### Overview
+**Medius** is a lightweight operation dispatcher for .NET.  
+It follows an **ACQRS** (Actions–Commands–Queries–Responsibility Segregation) model,
+providing a simple, type-safe way to execute operations through dedicated handlers.
+
+Supports:
+- Commands, Queries, and Actions  
+- Scoped lifetime handling  
+- Simple dependency injection setup  
+
+---
+
+### Quick Start
+```csharp
+// Register Medius
+services.AddMedius();
+
+// Define an operation
+public sealed class GetTimeQuery : IMediusQuery<DateTime> { }
+
+// Create its handler
+public sealed class GetTimeHandler : MediusQueryHandler<GetTimeQuery, DateTime>
+{
+    public override Task<DateTime?> HandleQueryAsync(GetTimeQuery query, CancellationToken ct)
+        => Task.FromResult<DateTime?>(DateTime.UtcNow);
+}
+
+// Invoke the operation
+var result = await medius.InvokeAsync(new GetTimeQuery());
+```
+
+---
+
+### Concepts
+
+ACQRS stands for **Actions, Commands, and Queries with Responsibility Segregation**.  
+It extends traditional CQRS principles by explicitly defining “Actions” as first-class operations 
+that modify state *and* return results — providing a balanced approach between commands and queries.
+
+| Operation Type | Base Interface | Purpose | Typical Return Type | Example Handler |
+|----------------|----------------|----------|----------------------|-----------------|
+| **Command** | `IMediusCommand` | Performs an action or side effect; does **not** return a result. | `MediusUndefinedType` | `MediusCommandHandler<TCommand>` |
+| **Query** | `IMediusQuery<TQueryResult>` | Retrieves or computes data without modifying state. | `TQueryResult` | `MediusQueryHandler<TQuery, TQueryResult>` |
+| **Action** | `IMediusAction<TActionResult>` | Performs an operation and **returns a result** (e.g., create, update, or process something). | `TActionResult` | `MediusActionHandler<TAction, TActionResult>` |
+
+Each operation has a matching handler that defines its execution logic.  
+All handlers are automatically discovered and registered by **Medius** during startup.
+
+---
+
+### 💡 **Highlights**
+- Zero configuration — handlers are auto-discovered via reflection  
+- DI-friendly (handlers can depend on scoped or transient services)  
+- No runtime reflection overhead after startup  
+- Fully documented API with XML summaries  
+
+---
+
+### Project Goals
+- **Lightweight by design** — focuses on operation dispatching without external dependencies or pipelines.  
+- **Framework-agnostic** — integrates cleanly into any .NET project using standard dependency injection.  
+- **Explicit, not opinionated** — encourages simple, typed operations over hidden behaviors or conventions.  
+- **Built around ACQRS** — unifies **Actions**, **Commands**, and **Queries** into a clear, consistent execution model.  
+- **Not a MediatR clone** — built independently to provide a smaller, faster, and clearer alternative for internal dispatching needs.  
+
+---
+
+### Requirements
+- .NET 8.0 or later  
+
+
+© 2025 ceronus — MIT License
