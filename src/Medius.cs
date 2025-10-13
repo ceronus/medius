@@ -22,7 +22,7 @@ namespace Medius
             _routes = GetRoutes(_handlerTypes);
             foreach (Type type in _handlerTypes)
             {
-                services.AddSingleton(type);
+                services.AddScoped(type);
             }
         }
 
